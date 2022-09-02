@@ -9,8 +9,12 @@
 import requests
 import json
 
+import copy
+
 
 class Endereco: 
+    atributo_classe = []
+    
     '''
     Endereço de uma pessoa ou conta.
     Esta classe possui overload de Contrutor, caso envie apenas três parametros será encaminhado
@@ -20,7 +24,7 @@ class Endereco:
     def __init__(self, cep, numero ,rua='', estado='', cidade='', complemento=''):
 
         if (rua == '') or (estado == '') or (cidade == ''):
-            end_json = self.consultar_cep(cep)
+            end_json = self.consultar_cep(str(cep))
 
             self.rua = end_json['logradouro']
             self.estado = end_json['uf']
@@ -38,13 +42,22 @@ class Endereco:
             self.complemento = complemento
             self.cep = str(cep)
 
-
-    def consultar_cep(self, cep):
+    @classmethod
+    def consultar_cep(cls, cep):
         '''
         Metodo realiza a consulta do cep em uma api publica para obter informações
         como estado, cidade e rua
         '''
         # continuam existindo variaveis locais, nem tudo é propriedade de objeto
+        if isinstance(cep, float):
+            return False
+        cep = str(cep)
+        if len(str(cep)) <8:
+            while len(str(cep)) !=8:
+                cep = '0' + str(cep)
+
+        if len(cep) != 8:
+            return False
 
         # end point da API de consulta ao cep
         url_api = f'https://viacep.com.br/ws/{str(cep)}/json/'
@@ -59,8 +72,14 @@ class Endereco:
 
         # converte a resposta json em dict
         json_resp = response.json()
+        if json_resp =={'erro': 'true'}:
+            return False
+        
         return json_resp
 
+    
+    def __str__(self) -> str:
+        return f'{self.cep} and {self.numero}'
 
 
 

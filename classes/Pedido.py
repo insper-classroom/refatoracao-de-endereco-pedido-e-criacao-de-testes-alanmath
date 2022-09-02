@@ -17,5 +17,26 @@ import re
 class Pedido:
     EM_ABERTO = 1
     PAGO = 2
-    pass
+    enderecos = []
+    def __init__(self):
+        self.produtos = []
+        self.endereco_entrega = ''
+        self.endereco_faturamento = ''
+        self.status = True
+        self.enderecos.append(self)
     
+    def get_produtos(self):
+        pass
+
+
+
+
+    
+
+
+    def __str__(self) -> str:
+        return f'Pagamento: {self.status}, endereco de endrega: {self.endereco_entrega}, endereco de faturamento: {self.endereco_faturamento}, produtos:{self.produtos}'
+
+
+
+        
